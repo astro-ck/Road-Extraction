@@ -27,11 +27,7 @@ total_gt_length = 0
 total_pred_length = 0
 mylog = open('~/data/massa/out/eval_log/' + log_name + '_connect.log', 'w')
 
-region_name_list = [["c",-2,-2,2,2],["g",-2,-2,2,2],["k",-2,-2,2,2],["o",-2,-2,2,2]]
-# region_name_list = [["c2",-4,-4,4,4], ["d",-4,-4,4,4]]
-# region_name_list = [["amsterdam",-4,-4,4,4], ["chicago",-4,-4,4,4], ["denver",-4,-4,4,4], ["la",-4,-4,4,4], ["montreal",-4,-4,4,4],
-#                         ["paris",-4,-4,4,4], ["pittsburgh",-4,-4,4,4], ["saltlakecity",-4,-4,4,4], ["san diego",-4,-4,4,4],
-#                         ["tokyo",-4,-4,4,4], ["toronto",-4,-4,4,4], ["vancouver",-4,-4,4,4]]
+region_name_list = [["amsterdam",-4,-4,4,4], ["chicago",-4,-4,4,4], ["denver",-4,-4,4,4]]
 for region_info in region_name_list:
     print("test region: "+region_info[0])
     graph_name = '~/data/Massachusetts/graph_post/'+ region_info[0] + ".graph" # ground truth graph
