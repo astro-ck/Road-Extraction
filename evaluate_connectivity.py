@@ -14,8 +14,8 @@ Then, statistic the number of fully connected segments in segmentation masks.
 The connectivity ratio is the percentage of fully connected segments. 
 """
 
-log_name = 'fusion1' # evaluation log file
-mask_dir = '~/data/massa/out/result_fusion1/' # segmentation masks for evaluating
+log_name = 'mask' # evaluation log file
+mask_dir = '~/data/out/mask/' # segmentation masks for evaluating
 
 total_gt_number = 0
 total_connected_number = 0
@@ -25,12 +25,12 @@ total_pred_number = 0
 total_connected_length = 0
 total_gt_length = 0
 total_pred_length = 0
-mylog = open('~/data/massa/out/eval_log/' + log_name + '_connect.log', 'w')
+mylog = open('~/data/out/eval_log/' + log_name + '_connect.log', 'w')
 
 region_name_list = [["amsterdam",-4,-4,4,4], ["chicago",-4,-4,4,4], ["denver",-4,-4,4,4]]
 for region_info in region_name_list:
     print("test region: "+region_info[0])
-    graph_name = '~/data/Massachusetts/graph_post/'+ region_info[0] + ".graph" # ground truth graph
+    graph_name = '~/data/graph_gt/'+ region_info[0] + ".graph" # ground truth graph
 
     gt_graph = graph.read_graph(graph_name)
     edge_nodes=[]
