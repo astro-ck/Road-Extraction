@@ -24,9 +24,14 @@ and fusion.
 
 ![image-20200728163332711](README.assets/image-20200728163332711.png)
 
+## Pretrain Model
+
+- base segmentation model, pre-tained in massachusetts dataset. [Google drive](https://drive.google.com/file/d/1dbuln9hERFOKAwy7stG4M7dBdzZaKDbW/view?usp=sharing)
+
 ## Code Introduction
 
 - **evaluate_connectivity.py**: evaluate the connectivity of final segmentation result.
+- **base_segmentation/road.py**: train or test the model. Modify the parameters before running.
 
 ## Contributing
 
