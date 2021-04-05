@@ -127,7 +127,7 @@ class Decoder(nn.Module):
         # low feature input channels(ratio 16) 64+128=192 + 256=448, output channel should be 16*16=256
         self.conv1 = nn.Conv2d(input_channel, 256, kernel_size=1, bias=False)
         self.bn1 = nn.BatchNorm2d(256)
-        self.relu = nn.ReLU() # 这里就是最底层那部分，这个卷积核大小以及BN，dropout这些东西不知道要不要，还有，要不要类似dlinknet加上dilated convolution
+        self.relu = nn.ReLU() 
         self.conv2 = nn.Conv2d(512, 256, kernel_size=3, padding=1, bias=False)
         self.bn2 = nn.BatchNorm2d(256)
         # self.dropout2 = nn.Dropout(0.5)
@@ -226,47 +226,6 @@ class DinkNet34(nn.Module):
         return e3,x_low
 
 
-class DinkNet50(nn.Module):
-    def __init__(self, num_classes=1):
-        super(DinkNet50, self).__init__()
-
-        resnet = models.resnet50(pretrained=True)
-        self.firstconv = resnet.conv1
-        self.firstbn = resnet.bn1
-        self.firstrelu = resnet.relu
-        self.firstmaxpool = resnet.maxpool
-        self.encoder1 = resnet.layer1
-        self.encoder2 = resnet.layer2
-        self.encoder3 = resnet.layer3
-        self.encoder4 = resnet.layer4
-
-    def forward(self, x):
-        # Encoder
-        x = self.firstconv(x)
-        x = self.firstbn(x)
-        x = self.firstrelu(x)
-        x = self.firstmaxpool(x) # N*64*64*64
-        e1 = self.encoder1(x)  # N*256*64*64
-        e2 = self.encoder2(e1) # N*512*32*32
-        e3 = self.encoder3(e2) # N*1024*16*16
-        e4 = self.encoder4(e3) # N*2048*8*8
-
-        # Center
-        e4 = self.dblock(e4)
-
-        # Decoder
-        d4 = self.decoder4(e4) + e3
-        d3 = self.decoder3(d4) + e2
-        d2 = self.decoder2(d3) + e1
-        d1 = self.decoder1(d2)
-        out = self.finaldeconv1(d1)
-        out = self.finalrelu1(out)
-        out = self.finalconv2(out)
-        out = self.finalrelu2(out)
-        out = self.finalconv3(out)
-
-        return F.sigmoid(out)
-
 class DUNet(nn.Module):
     def __init__(self, num_class=1):
         super(DUNet, self).__init__()
@@ -277,7 +236,6 @@ class DUNet(nn.Module):
     def forward(self, x):
         x, x_low = self.encoder.forward(x)
         out = self.decoder.forward(x, x_low)
-# 那我们去买点东西吃也行
         return out
 
 pretrained_mean = torch.tensor([0.485, 0.456, 0.406], requires_grad = False).view((1, 3, 1, 1))

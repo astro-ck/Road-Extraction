@@ -10,27 +10,29 @@ import numpy as np
 from time import time
 
 from networks.dinknet import DUNet
-
+import sys
 
 BATCHSIZE_PER_CARD = 2
+
 
 class TTAFrame():
     def __init__(self, net):
         self.net = net().cuda()
         self.net = torch.nn.DataParallel(self.net, device_ids=range(torch.cuda.device_count()))
 
-    def test_one_img(self, img, evalmode=True):
+    def test_one_img_from_path(self, path, evalmode=True):
         if evalmode:
             self.net.eval()
         batchsize = torch.cuda.device_count() * BATCHSIZE_PER_CARD
         if batchsize >= 8:
-            return self.test_one_img_1(img)
+            return self.test_one_img_from_path_1(path)
         elif batchsize >= 4:
-            return self.test_one_img_2(img)
+            return self.test_one_img_from_path_2(path)
         elif batchsize >= 2:
-            return self.test_one_img_4(img)
+            return self.test_one_img_from_path_4(path)
 
-    def test_one_img_8(self, img):
+    def test_one_img_from_path_8(self, path):
+        img = cv2.imread(path)#.transpose(2,0,1)[None]
         img90 = np.array(np.rot90(img))
         img1 = np.concatenate([img[None],img90[None]])
         img2 = np.array(img1)[:,::-1]
@@ -57,7 +59,8 @@ class TTAFrame():
         
         return mask2
 
-    def test_one_img_4(self, img):
+    def test_one_img_from_path_4(self, path):
+        img = cv2.imread(path)#.transpose(2,0,1)[None]
         img90 = np.array(np.rot90(img))
         img1 = np.concatenate([img[None],img90[None]])
         img2 = np.array(img1)[:,::-1]
@@ -84,7 +87,8 @@ class TTAFrame():
         
         return mask2
     
-    def test_one_img_2(self, img):
+    def test_one_img_from_path_2(self, path):
+        img = cv2.imread(path)#.transpose(2,0,1)[None]
         img90 = np.array(np.rot90(img))
         img1 = np.concatenate([img[None],img90[None]])
         img2 = np.array(img1)[:,::-1]
@@ -106,7 +110,8 @@ class TTAFrame():
         
         return mask3
     
-    def test_one_img_1(self, img):
+    def test_one_img_from_path_1(self, path):
+        img = cv2.imread(path)#.transpose(2,0,1)[None]
         
         img90 = np.array(np.rot90(img))
         img1 = np.concatenate([img[None],img90[None]])
@@ -125,49 +130,40 @@ class TTAFrame():
         return mask3
 
     def load(self, path):
+
         self.net.load_state_dict(torch.load(path))
 
 
 if __name__=="__main__":
     testdir = "~/data/deepglobe/test/sat/"
     test = os.listdir(testdir)
-    solver = TTAFrame(DUNet)
+    solver = TTAFrame(Dli)
     # solver = TTAFrame(Unet)
     # solver.load('weights/dlinknet.th')
-    solver.load('~/pyprojects/RoadNet/boost_train/weights/deepglobe_roadnet_2.th')
+    # model_id=sys.argv[1]
+    model_id=0
+    solver.load('~/pyprojects/RoadNet/weights/deepglobe_roadnet{}.th'.format(model_id))
     tic = time()
-    target = '~/data/deepglobe/out/boosting/tiny_boost2/'
+    target = '~/data/deepglobe/out/roadnet_seg_result_binary{}/'.format(model_id)
     if os.path.isdir(target):
         pass
     else:
         os.makedirs(target)
-
-    window_size=256
-    step_length = 256
+    # os.makedirs(target)
 
     for i, name in enumerate(test):
         if i%10 == 0:
             print(i/10, '    ','%.2f'%(time()-tic))
-        img=cv2.imread(testdir + name)
-        image_size=img.shape[0]
-        mask=np.zeros((1024,1024))
-
-        for start_row in range(0, image_size, step_length):
-            for start_col in range(0, image_size, step_length):
-                tiny_sat = img[start_row:start_row + window_size, start_col:start_col + window_size]
-                tiny_mask = solver.test_one_img(tiny_sat)
-                mask[start_row:start_row + window_size, start_col:start_col + window_size]=tiny_mask
-
-        # mask[mask > 4] = 255
-        # mask[mask <= 4] = 0
+        mask = solver.test_one_img_from_path(testdir + name)
+        mask[mask > 4] = 255
+        mask[mask <= 4] = 0
 
         # mask = np.concatenate([mask[:, :, None], mask[:, :, None], mask[:, :, None]], axis=2)
 
         # generate gray predicted result
-        maximum = mask.max()
-        minimum = mask.min()
+        # mask[mask<0]=0
         # mask = (mask - minimum) / (maximum - minimum)
-        mask = ((mask - minimum) / 8) * 255
+        # mask = ((mask) / 8) * 255
         # print("max={},min={},mask={}".format(maximum,minimum,mask))
 
         # img = cv2.imread(testdir+name)

@@ -1,24 +1,24 @@
 import torch
-import sys
-sys.path.append("./network")
+
 from time import time
 from networks.dinknet import DUNet
 from framework import MyFrame
 from data import ImageFolder
-import os
+from datagathering.adaboost_dataset import read_image_name
 
-SHAPE = (1024, 1024)
+SHAPE = (256, 256)
 
 def train_operation(train_paras):
     sat_dir = train_paras["image_dir"]
     lab_dir = train_paras["gt_dir"]
     train_id = train_paras["train_id"]
+    image_list_dir = train_paras["image_list_dir"]
     logfile_dir = train_paras["logfile_dir"]
     model_dir = train_paras["model_dir"]
     model_name = train_paras["model_name"]
     learning_rate = train_paras["learning_rate"]
 
-    imagelist = os.listdir(sat_dir)
+    imagelist = read_image_name(image_list_dir + "train_image_file_" + str(train_id) + ".txt")
 
     trainlist = list(map(lambda x: x[:-8], imagelist))
     # trainlist = trainlist[:1000]
@@ -57,7 +57,6 @@ def train_operation(train_paras):
     print("Precompute weight for 5 epoches")
     save_tensorboard_iter = 5
     pre_compute_flag = 1
-    # solver.load(model_dir + model_name + '.th')
     # pretrain W
     for epoch in range(1, 6):
         data_loader_iter = iter(data_loader)
@@ -76,7 +75,6 @@ def train_operation(train_paras):
 
     print("pretrain is OVER")
     print("pretrain is OVER", file=mylog)
-
     step_update = False
     for epoch in range(1, total_epoch + 1):
         data_loader_iter = iter(data_loader)
@@ -122,7 +120,6 @@ def train_operation(train_paras):
             # solver.update_lr(5.0, factor=True, mylog=mylog)
             if step_update:
                 solver.update_lr(5.0, factor=True, mylog=mylog)
-                step_update=False
             else:
                 solver.update_lr_poly(epoch, total_epoch, mylog, total_epoch / 40)
         if not step_update:
@@ -135,15 +132,15 @@ def train_operation(train_paras):
     mylog.close()
 
 if __name__=="__main__":
-    image_list_dir = ""
-    train_id = 00
+    image_list_dir = "E:/shao_xing/tiny_dataset/boost_train/"
+    train_id = 2
     logfile_dir = "log/"
     model_dir = 'weights/'
-    model_name = 'deepglobe_roadnet' + str(train_id)
-    sat_dir = '~/data/deepglobe/train/sat/'
-    lab_dir = '~/data/deepglobe/train/lab/'
-    train_paras={"learning_rate":0.005,
-                 "total_epoch":300,
+    model_name = 'dlinknet_dupsample_test' + str(train_id)
+    sat_dir = 'E:/shao_xing/tiny_dataset/D1/original/sat/'
+    lab_dir = 'E:/shao_xing/tiny_dataset/D1/original/lab/'
+    train_paras={"learning_rate":0.003,
+                 "total_epoch":200,
                  "train_id":train_id,
                  "image_dir":sat_dir,
                  "gt_dir":lab_dir,

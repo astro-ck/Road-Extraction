@@ -1,5 +1,5 @@
 from datagathering.adaboost_dataset import generate_boosting_data
-from train import train_operation
+from train_tiny import train_operation
 import os
 import time
 import sys
