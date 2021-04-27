@@ -1,5 +1,9 @@
 # Road-Extraction
+A novel CNN-based multistage framework is proposed for simultaneous road surface and centerline tracing from remote sensing images instead of treating them separately as most current road extraction methods do.
+
 This repository is the official implementation of [Simultaneous Road Surface and Centerline Extraction From Large-Scale Remote Sensing Images Using CNN-Based Segmentation and Tracing](https://ieeexplore.ieee.org/document/9094008). 
+
+## Overview
 
 Our framework consists of three steps: boosting segmentation, multiple starting points tracing,
 and fusion. 
@@ -16,22 +20,54 @@ and fusion.
 
 ## Results
 
-### Road centerline results
+
 
 ![image-20200728163239118](README.assets/image-20200728163239118.png)
 
-### Road surface results
-
 ![image-20200728163332711](README.assets/image-20200728163332711.png)
+
+![image-20210427155815430](README.assets/image-20210427155815430.png)
+
+## Dependencies
+```bash
+Python == 3.6.7
+PyTorch == 1.1.0
+OpenCV == 4.1.0
+Tensorflow-gpu == 1.8.0
+Rtree == 0.8.3
+Numpy == 1.16.3
+```
+
+
+## Usage
+
+**1. Download dataset and prepare for the code**
+
+If your road ground-truth is only in segmentation format, then you may have to first convert it to graph format (through mapextract.py) for centerline tracing process.
+
+ **2. Boosting segmentation**
+
+The initial road surface segmentation is achieved with D-LinkNet (CVPR_2018), you can refer to the original implementation or our reimplementation (in the folder initial_seg and run road.py). Regarding the designed Boosting Segmentation Network (BSNet), run BSNet/cmd.py to train and test multiple BSNets. The corresponding voting weight and training set for each BSNet are listed in the folder BSNet/boost_train.
+
+**3. MSP-Tracer**
+
+First, run corner_detect.py to generate the starting points from the segmentation results. Then, train CNN by using Tracer/train.py, or you can refer to the original implementation of RoadTracer (CVPR_2018). For inference, run Tracer/infer_MSPTracer.py and Tracer/infer_MSPTracer_postprocess.py.
+
+**4. Fusion**
+
+Run fusion.py to produce the final and refined road segmentation and centerline maps.
+
+**5. Evaluation road connectivity (Conn)**
+
+Run evaluate_connectivity.py
+
+Modify the parameters before running. 
+
 
 ## Pretrain Model
 
 - base segmentation model, pre-tained in massachusetts dataset. [Google drive](https://drive.google.com/file/d/1dbuln9hERFOKAwy7stG4M7dBdzZaKDbW/view?usp=sharing)
 
-## Code Introduction
-
-- **evaluate_connectivity.py**: evaluate the connectivity of final segmentation result.
-- **base_segmentation/road.py**: train or test the model. Modify the parameters before running.
 
 ## Contributing
 
@@ -43,7 +79,7 @@ and fusion.
 
 If you find our work useful in your research, please cite:
 
-```
+```latex
 @ARTICLE{9094008,  
 author={Y. {Wei} and K. {Zhang} and S. {Ji}},  
 journal={IEEE Transactions on Geoscience and Remote Sensing},   
@@ -51,5 +87,3 @@ title={Simultaneous Road Surface and Centerline Extraction From Large-Scale Remo
 year={2020},  
 pages={1-13},}
 ```
-
-## Important! We are still cleaning up the source code. The code in this repo is incomplete.
