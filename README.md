@@ -1,4 +1,7 @@
+
+
 # Road-Extraction
+
 A novel CNN-based multistage framework is proposed for simultaneous road surface and centerline tracing from remote sensing images instead of treating them separately as most current road extraction methods do.
 
 This repository is the official implementation of [Simultaneous Road Surface and Centerline Extraction From Large-Scale Remote Sensing Images Using CNN-Based Segmentation and Tracing](https://ieeexplore.ieee.org/document/9094008). 
@@ -20,13 +23,17 @@ and fusion.
 
 ## Results
 
+![image-20200728163332711](README.assets/image-20200728163332711.png)
+
+![image-20210427155815430](README.assets/image-20210427155815430.png)
+
 
 
 ![image-20200728163239118](README.assets/image-20200728163239118.png)
 
-![image-20200728163332711](README.assets/image-20200728163332711.png)
+![image-20210427161701545](README.assets/image-20210427161701545.png)
 
-![image-20210427155815430](README.assets/image-20210427155815430.png)
+
 
 ## Dependencies
 ```bash
@@ -86,10 +93,13 @@ Modify the parameters before running.
 If you find our work useful in your research, please cite:
 
 ```latex
-@ARTICLE{9094008,  
-author={Y. {Wei} and K. {Zhang} and S. {Ji}},  
-journal={IEEE Transactions on Geoscience and Remote Sensing},   
-title={Simultaneous Road Surface and Centerline Extraction From Large-Scale Remote Sensing Images Using CNN-Based Segmentation and Tracing},  
-year={2020},  
-pages={1-13},}
+@ARTICLE{9094008,
+  author={Wei, Yao and Zhang, Kai and Ji, Shunping},
+  journal={IEEE Transactions on Geoscience and Remote Sensing}, 
+  title={Simultaneous Road Surface and Centerline Extraction From Large-Scale Remote Sensing Images Using CNN-Based Segmentation and Tracing}, 
+  year={2020},
+  volume={58},
+  number={12},
+  pages={8919-8931},
+  doi={10.1109/TGRS.2020.2991733}}
 ```
