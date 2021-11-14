@@ -85,7 +85,7 @@ Modify the parameters before running.
 ## Contributing
 
 - [yao WEI](https://github.com/weiyao1996)
-- [kai ZHANG](https://github.com/SummerOf15)
+- [kai ZHANG](https://github.com/kai-zhang-er)
 
 
 ## Citation
