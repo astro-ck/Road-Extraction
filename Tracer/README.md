@@ -1,5 +1,8 @@
 RoadTracer
 ==========
+Data Preparation
+--------
+please refer to [roadtracer](https://github.com/mitroadmaps/roadtracer)
 
 Training
 --------
