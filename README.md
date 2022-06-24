@@ -79,7 +79,7 @@ Modify the parameters before running.
 
 ## Pretrain Model
 
-- baseline segmentation model, pretrained in massachusetts dataset. [Google drive](https://drive.google.com/file/d/1dbuln9hERFOKAwy7stG4M7dBdzZaKDbW/view?usp=sharing)
+- baseline segmentation model, pretrained in massachusetts dataset. [Google drive](https://drive.google.com/file/d/1GNnGG-CEKf44LrEcPNXxOf0OJ9wAL7ZI/view?usp=sharing)
 
 
 ## Contributing
