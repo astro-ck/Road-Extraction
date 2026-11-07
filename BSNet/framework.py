@@ -153,7 +153,7 @@ class MyFrame():
         torch.save(self.cuda_net.state_dict(), path)
         
     def load(self, path):
-        dict=torch.load(path)
+        dict=torch.load(path, weights_only=True)
         self.cuda_net.load_state_dict(dict)
     
     def update_lr_poly(self, step, total_step, mylog, th):
